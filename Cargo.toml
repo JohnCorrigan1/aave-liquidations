@@ -1,9 +1,9 @@
 [package]
-name = "substreams-template"
+name = "aave_liquidations"
 version = "0.1.0"
-description = "Substream template demo project"
+description = "Aave Liquidations Substream"
 edition = "2021"
-repository = "https://github.com/streamingfast/substreams-template"
+repository = "https://github.com/JohnCorrigan1/aave-liquidations"
 license = "Apache 2.0"
 
 [lib]

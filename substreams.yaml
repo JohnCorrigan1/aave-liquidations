@@ -9,6 +9,7 @@ imports:
 protobuf:
   files:
     - erc721.proto
+    - pool.proto
   importPaths:
     - ./proto
 
@@ -25,6 +26,14 @@ modules:
       - source: sf.ethereum.type.v2.Block
     output:
       type: proto:eth.erc721.v1.Transfers
+
+  - name: map_liquidations
+    kind: map
+    initialBlock: 17916178 
+    inputs:
+      - source: sf.ethereum.type.v2.Block
+    output:
+      type: proto:pool.Liquidations
 
   - name: store_transfers
     kind: store

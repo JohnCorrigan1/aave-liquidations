@@ -6,5 +6,9 @@ fn main() -> Result<(), anyhow::Error> {
         .generate()?
         .write_to_file("src/abi/erc721.rs")?;
 
+    Abigen::new("POOL", "abi/pool.json")?
+        .generate()?
+        .write_to_file("src/abi/pool.rs")?;
+
     Ok(())
 }
