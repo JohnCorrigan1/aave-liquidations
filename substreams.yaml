@@ -8,7 +8,6 @@ imports:
 
 protobuf:
   files:
-    - erc721.proto
     - pool.proto
   importPaths:
     - ./proto
@@ -19,39 +18,28 @@ binaries:
     file: ./target/wasm32-unknown-unknown/release/substreams.wasm
 
 modules:
-  - name: map_transfers
-    kind: map
-    initialBlock: 12287507
-    inputs:
-      - source: sf.ethereum.type.v2.Block
-    output:
-      type: proto:eth.erc721.v1.Transfers
-
   - name: map_liquidations
     kind: map
-    initialBlock: 17916178 
+    initialBlock: 17922757 
     inputs:
       - source: sf.ethereum.type.v2.Block
     output:
       type: proto:pool.Liquidations
 
-  - name: store_transfers
-    kind: store
-    initialBlock: 12287507
-    updatePolicy: add
-    valueType: int64
-    inputs:
-      - map: map_transfers
-
-  - name: db_out
+  - name: map_wbtc_liquidations
     kind: map
-    initialBlock: 12287507
+    initialBlock: 17922757 
     inputs:
-      - source: sf.substreams.v1.Clock
-      - map: map_transfers
-      - store: store_transfers
-        mode: deltas
+      - map: map_liquidations
     output:
-      type: proto:sf.substreams.sink.database.v1.DatabaseChanges
+      type: proto:pool.Wbtc_Liquidations
+
+  - name: map_aave_liquidations
+    kind: map
+    initialBlock: 17922757 
+    inputs:
+      - map: map_liquidations
+    output:
+      type: proto:pool.Aave_Liquidations
 
 network: mainnet

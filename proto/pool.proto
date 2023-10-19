@@ -17,3 +17,19 @@ message Liquidation {
     string liquidator = 8;
     bool receive_a_token = 9;
 }
+
+message Token_Liquidations {
+    repeated Token_Liquidation token_liquidations = 1;
+}
+
+message Token_Liquidation {
+    string trx_hash = 1;
+    string block_num = 2;
+    string collateral_asset = 3;
+    string debt_asset = 4;
+    string user = 5;
+    string debt_to_cover = 6;
+    float liquidated_collateral_amount = 7;
+    string liquidator = 8;
+    bool receive_a_token = 9;
+}
