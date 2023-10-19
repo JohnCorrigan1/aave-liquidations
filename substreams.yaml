@@ -32,7 +32,7 @@ modules:
     inputs:
       - map: map_liquidations
     output:
-      type: proto:pool.Wbtc_Liquidations
+      type: proto:pool.Token_Liquidations
 
   - name: map_aave_liquidations
     kind: map
@@ -40,6 +40,24 @@ modules:
     inputs:
       - map: map_liquidations
     output:
-      type: proto:pool.Aave_Liquidations
+      type: proto:pool.Token_Liquidations
+
+  - name: map_weth_liquidations
+    kind: map
+    initialBlock: 17922757 
+    inputs:
+      - map: map_liquidations
+    output:
+      type: proto:pool.Token_Liquidations
+
+  - name: map_wsteth_liquidations
+    kind: map
+    initialBlock: 17922757 
+    inputs:
+      - map: map_liquidations
+    output:
+      type: proto:pool.Token_Liquidations
+
+
 
 network: mainnet

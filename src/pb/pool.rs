@@ -48,8 +48,8 @@ pub struct TokenLiquidation {
     pub user: ::prost::alloc::string::String,
     #[prost(string, tag="6")]
     pub debt_to_cover: ::prost::alloc::string::String,
-    #[prost(float, tag="7")]
-    pub liquidated_collateral_amount: f32,
+    #[prost(double, tag="7")]
+    pub liquidated_collateral_amount: f64,
     #[prost(string, tag="8")]
     pub liquidator: ::prost::alloc::string::String,
     #[prost(bool, tag="9")]

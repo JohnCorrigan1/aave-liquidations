@@ -29,7 +29,7 @@ message Token_Liquidation {
     string debt_asset = 4;
     string user = 5;
     string debt_to_cover = 6;
-    float liquidated_collateral_amount = 7;
+    double liquidated_collateral_amount = 7;
     string liquidator = 8;
     bool receive_a_token = 9;
 }

@@ -18,7 +18,14 @@ fn map_liquidations(
         .events::<abi::pool::events::LiquidationCall>(&[&POOL_CONTRACT])
         .map(|(liquidation, log)| {
             substreams::log::info!("Liquidation seen");
-
+            for trx in &blk.transaction_traces {
+                if &trx.hash == &log.receipt.transaction.hash {
+                    if let Some(value) = &trx.value {
+                        substreams::log::info!("Liquidation seen");
+                        substreams::log::info!("trx: {:?}", value);
+                    }
+                }
+            }
             pool::Liquidation {
                 trx_hash: Hex::encode(&log.receipt.transaction.hash),
                 block_num: blk.number.to_string(),
@@ -42,67 +49,16 @@ fn map_liquidations(
 #[substreams::handlers::map]
 fn map_wbtc_liquidations(
     liquidations: pool::Liquidations,
-) -> Result<Option<pool::WbtcLiquidations>, substreams::errors::Error> {
-    let wbtc_liquidations: Vec<_> = liquidations
+) -> Result<Option<pool::TokenLiquidations>, substreams::errors::Error> {
+    let token_liquidations: Vec<_> = liquidations
         .liquidations
         .iter()
         .filter_map(|liquidation| {
-            substreams::log::info!("asset: {}", liquidation.collateral_asset);
-            substreams::log::info!(
-                "asset hexed: {}",
-                Hex::encode("0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599")
-            );
             if liquidation.collateral_asset
                 == "2260fac5e5542a773aa44fbcfedf7c193bc2c599".to_string()
             {
                 substreams::log::info!("Liquidation seen");
-                Some(pool::WbtcLiquidation {
-                    trx_hash: liquidation.trx_hash.clone(),
-                    block_num: liquidation.block_num.clone(),
-                    collateral_asset: liquidation.collateral_asset.clone(),
-                    debt_asset: liquidation.debt_asset.clone(),
-                    user: liquidation.user.clone(),
-                    debt_to_cover: liquidation.debt_to_cover.clone(),
-                    liquidated_collateral_amount: liquidation
-                        .liquidated_collateral_amount
-                        .clone()
-                        .parse::<f32>()
-                        .unwrap()
-                        / 1e8,
-                    liquidator: liquidation.liquidator.clone(),
-                    receive_a_token: liquidation.receive_a_token,
-                })
-            } else {
-                None
-            }
-        })
-        .collect();
-
-    if wbtc_liquidations.len() == 0 {
-        return Ok(None);
-    }
-
-    Ok(Some(pool::WbtcLiquidations { wbtc_liquidations }))
-}
-
-#[substreams::handlers::map]
-fn map_aave_liquidations(
-    liquidations: pool::Liquidations,
-) -> Result<Option<pool::AaveLiquidations>, substreams::errors::Error> {
-    let aave_liquidations: Vec<_> = liquidations
-        .liquidations
-        .iter()
-        .filter_map(|liquidation| {
-            substreams::log::info!("asset: {}", liquidation.collateral_asset);
-            substreams::log::info!(
-                "asset hexed: {}",
-                Hex::encode("0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599")
-            );
-            if liquidation.collateral_asset
-                == "2260fac5e5542a773aa44fbcfedf7c193bc2c599".to_string()
-            {
-                substreams::log::info!("Liquidation seen");
-                Some(pool::AaveLiquidation {
+                Some(pool::TokenLiquidation {
                     trx_hash: liquidation.trx_hash.clone(),
                     block_num: liquidation.block_num.clone(),
                     collateral_asset: liquidation.collateral_asset.clone(),
@@ -124,9 +80,132 @@ fn map_aave_liquidations(
         })
         .collect();
 
-    if aave_liquidations.len() == 0 {
+    if token_liquidations.len() == 0 {
         return Ok(None);
     }
 
-    Ok(Some(pool::AaveLiquidations { aave_liquidations }))
+    Ok(Some(pool::TokenLiquidations { token_liquidations }))
+}
+
+#[substreams::handlers::map]
+fn map_aave_liquidations(
+    liquidations: pool::Liquidations,
+) -> Result<Option<pool::TokenLiquidations>, substreams::errors::Error> {
+    let token_liquidations: Vec<_> = liquidations
+        .liquidations
+        .iter()
+        .filter_map(|liquidation| {
+            if liquidation.collateral_asset
+                == "7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9".to_string()
+            {
+                substreams::log::info!("aave liquidations found");
+                Some(pool::TokenLiquidation {
+                    trx_hash: liquidation.trx_hash.clone(),
+                    block_num: liquidation.block_num.clone(),
+                    collateral_asset: liquidation.collateral_asset.clone(),
+                    debt_asset: liquidation.debt_asset.clone(),
+                    user: liquidation.user.clone(),
+                    debt_to_cover: liquidation.debt_to_cover.clone(),
+                    liquidated_collateral_amount: liquidation
+                        .liquidated_collateral_amount
+                        .clone()
+                        .parse::<f64>()
+                        .unwrap()
+                        / 1e18,
+                    liquidator: liquidation.liquidator.clone(),
+                    receive_a_token: liquidation.receive_a_token,
+                })
+            } else {
+                None
+            }
+        })
+        .collect();
+
+    if token_liquidations.len() == 0 {
+        return Ok(None);
+    }
+
+    Ok(Some(pool::TokenLiquidations { token_liquidations }))
+}
+
+#[substreams::handlers::map]
+fn map_weth_liquidations(
+    liquidations: pool::Liquidations,
+) -> Result<Option<pool::TokenLiquidations>, substreams::errors::Error> {
+    let token_liquidations: Vec<_> = liquidations
+        .liquidations
+        .iter()
+        .filter_map(|liquidation| {
+            if liquidation.collateral_asset
+                == "c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2".to_string()
+            {
+                substreams::log::info!("weth liquidations found");
+                Some(pool::TokenLiquidation {
+                    trx_hash: liquidation.trx_hash.clone(),
+                    block_num: liquidation.block_num.clone(),
+                    collateral_asset: liquidation.collateral_asset.clone(),
+                    debt_asset: liquidation.debt_asset.clone(),
+                    user: liquidation.user.clone(),
+                    debt_to_cover: liquidation.debt_to_cover.clone(),
+                    liquidated_collateral_amount: liquidation
+                        .liquidated_collateral_amount
+                        .clone()
+                        .parse::<f64>()
+                        .unwrap()
+                        / 1e18,
+                    liquidator: liquidation.liquidator.clone(),
+                    receive_a_token: liquidation.receive_a_token,
+                })
+            } else {
+                None
+            }
+        })
+        .collect();
+
+    if token_liquidations.len() == 0 {
+        return Ok(None);
+    }
+
+    Ok(Some(pool::TokenLiquidations { token_liquidations }))
+}
+
+#[substreams::handlers::map]
+fn map_wsteth_liquidations(
+    liquidations: pool::Liquidations,
+) -> Result<Option<pool::TokenLiquidations>, substreams::errors::Error> {
+    let token_liquidations: Vec<_> = liquidations
+        .liquidations
+        .iter()
+        .filter_map(|liquidation| {
+            if liquidation.collateral_asset
+                == "7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0".to_string()
+            {
+                substreams::log::info!("wsteth liquidations found");
+                Some(pool::TokenLiquidation {
+                    trx_hash: liquidation.trx_hash.clone(),
+                    block_num: liquidation.block_num.clone(),
+                    collateral_asset: liquidation.collateral_asset.clone(),
+                    debt_asset: liquidation.debt_asset.clone(),
+                    user: liquidation.user.clone(),
+                    debt_to_cover: liquidation.debt_to_cover.clone(),
+                    liquidated_collateral_amount: liquidation
+                        .liquidated_collateral_amount
+                        .clone()
+                        .parse::<f64>()
+                        .unwrap()
+                        / 1e18,
+                    liquidator: liquidation.liquidator.clone(),
+                    receive_a_token: liquidation.receive_a_token,
+                })
+            } else {
+                None
+            }
+        })
+        .collect();
+
+    if token_liquidations.len() == 0 {
+        return Ok(None);
+    }
+
+    Ok(Some(pool::TokenLiquidations { token_liquidations }))
 }
