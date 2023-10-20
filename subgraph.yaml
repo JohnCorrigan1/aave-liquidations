@@ -1,6 +1,6 @@
 specVersion: 0.0.1
 description: Aave v3 liquidations Mainnet (powered by Substreams)
-repository: https://github.com/streamingfast/substreams-erc20-balanace-changes.git
+repository: https://github.com/JohnCorrigan1/aave-liquidations.git 
 schema:
   file: ./schema.graphql
 
@@ -11,7 +11,7 @@ dataSources:
     source:
       package:
         moduleName: graph_out
-        file: ./aave_liquidations-v0.0.1.spkg
+        file: ./aave-v3-liquidations-v0.1.0.spkg
     mapping:
       kind: substreams/graph-entities
       apiVersion: 0.0.7
