@@ -1,0 +1,14 @@
+type Liquidation @entity(immutable: true) {
+    id: ID!
+
+    txHash: String!
+
+    liquidator: String!
+    liquidated_address: String!
+    debt_to_cover: String!
+    liquidated_collateral_amount: String!
+    receive_a_token: String!
+
+    block_num: BigInt!
+    timestamp: BigInt!
+}
