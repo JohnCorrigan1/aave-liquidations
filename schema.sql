@@ -1,4 +1,4 @@
-create table if not exists liquidations {
+create table if not exists liquidations (
     id text not null constraint liquidations_pk primary key,
     trx_hash text not null,
     liquidator text not null,
@@ -7,5 +7,5 @@ create table if not exists liquidations {
     liquidated_collateral_amount text not null,
     receive_a_token text not null,
     block_num int not null,
-    timestamp text not null,
-}
+    timestamp text not null
+);

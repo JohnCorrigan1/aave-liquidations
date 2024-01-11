@@ -2,6 +2,7 @@ use crate::abi;
 use crate::pb;
 use hex_literal::hex;
 use pb::pool;
+use substreams::scalar::BigInt;
 use substreams::Hex;
 use substreams_ethereum::pb::sf::ethereum::r#type::v2 as eth;
 
@@ -17,7 +18,17 @@ pub fn map_liquidations(
         .events::<abi::pool::events::LiquidationCall>(&[&POOL_CONTRACT])
         .map(|(liquidation, log)| {
             substreams::log::info!("Liquidation seen");
-
+            for trx in &blk.transaction_traces {
+                if trx.hash == log.receipt.transaction.hash {
+                    substreams::log::info!("Liquidation seen");
+                    if let Some(v) = &trx.value {
+                        substreams::log::info!(
+                            "trx: {:?}",
+                            BigInt::from_unsigned_bytes_be(&v.bytes)
+                        );
+                    }
+                }
+            }
             pool::Liquidation {
                 trx_hash: Hex::encode(&log.receipt.transaction.hash),
                 block_num: blk.number.to_string(),

@@ -2,7 +2,7 @@ ENDPOINT ?= mainnet.eth.streamingfast.io:443
 START_BLOCK ?= 17929844
 # aave 17929844
 # wbtc 17922757
-STOP_BLOCK ?= +1000000
+STOP_BLOCK ?= +1000
 
 .PHONY: build
 build:
@@ -11,6 +11,10 @@ build:
 .PHONY: run
 run: build
 	substreams run -e $(ENDPOINT) substreams.yaml map_liquidations -s $(START_BLOCK) -t $(STOP_BLOCK)
+
+.PHONY: runGraph
+runGraph: build
+	substreams run -e $(ENDPOINT) substreams.yaml graph_out
 
 .PHONY: gui
 gui: build

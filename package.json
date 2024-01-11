@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "deploy": "graph deploy",
+    "subgraph:build": "graph build"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.64.1"
+  }
+}

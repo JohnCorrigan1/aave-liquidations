@@ -1,0 +1,12 @@
+[chains.mainnet]
+provider = [
+  { label = "substreams-provider-mainnet",
+    details = { type = "substreams",
+    url = "https://mainnet-substreams-url.grpc.substreams.io/",
+    token = "exampletokenhere" }},
+  { label = "firehose-provider-mainnet",
+    details = { type = "firehose",
+    url = "https://mainnet-firehose-url.grpc.firehose.io/",
+    token = "exampletokenhere" }},
+]shard = "main"
+protocol = "ethereum"
