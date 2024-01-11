@@ -2,7 +2,7 @@ specVersion: 0.0.4
 description: Aave v3 liquidations Mainnet (powered by Substreams)
 repository: https://github.com/JohnCorrigan1/aave-liquidations.git 
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 
 dataSources:
   - kind: substreams
@@ -11,7 +11,7 @@ dataSources:
     source:
       package:
         moduleName: graph_out
-        file: ./aave-v3-liquidations-v0.1.0.spkg
+        file: ./aave-v3-liquidations-v0.2.0.spkg
     mapping:
       kind: substreams/graph-entities
-      apiVersion: 0.0.7
+      apiVersion: 0.0.5

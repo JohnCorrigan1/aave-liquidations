@@ -1,14 +1,16 @@
 type Liquidation @entity(immutable: true) {
     id: ID!
 
-    txHash: String!
+    trx_hash: String!
 
     liquidator: String!
     liquidated_address: String!
+    collateral_asset: String!
+    debt_asset: String!
     debt_to_cover: String!
     liquidated_collateral_amount: String!
-    receive_a_token: String!
+    receive_a_token: Boolean!
 
-    block_num: BigInt!
-    timestamp: BigInt!
+    block_num: String!
+    timestamp: String!
 }
