@@ -1,6 +1,7 @@
 use crate::pb;
 use pb::pool;
-use substreams::{errors::Error, pb::substreams::Clock};
+use std::str::FromStr;
+use substreams::{errors::Error, pb::substreams::Clock, scalar::BigInt};
 use substreams_database_change::pb::database::DatabaseChanges;
 use substreams_entity_change::pb::entity::EntityChanges;
 use substreams_entity_change::tables::Tables;
@@ -22,18 +23,24 @@ pub fn graph_out(
 
         tables
             .create_row("Liquidation", key)
-            .set("trx_hash", liquidation.trx_hash)
+            .set("txHash", liquidation.trx_hash)
             .set("liquidator", liquidation.liquidator)
-            .set("liquidated_address", liquidation.user)
-            .set("collateral_asset", liquidation.collateral_asset)
-            .set("debt_asset", liquidation.debt_asset)
-            .set("debt_to_cover", liquidation.debt_to_cover)
+            .set("liquidatedAddress", liquidation.user)
+            .set("collateralAsset", liquidation.collateral_asset)
+            .set("debtAsset", liquidation.debt_asset)
             .set(
-                "liquidated_collateral_amount",
-                liquidation.liquidated_collateral_amount,
+                "debtToCover",
+                BigInt::from_str(&liquidation.debt_to_cover).unwrap(),
             )
-            .set("receive_a_token", liquidation.receive_a_token)
-            .set("block_num", liquidation.block_num)
+            .set(
+                "liquidatedCollateralAmount",
+                BigInt::from_str(&liquidation.liquidated_collateral_amount).unwrap(),
+            )
+            .set("receiveToken", liquidation.receive_a_token)
+            .set(
+                "blockNumber",
+                BigInt::from_str(&liquidation.block_num).unwrap(),
+            )
             .set("timestamp", &timestamp.clone().to_string());
     }
 

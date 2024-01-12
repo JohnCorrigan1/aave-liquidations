@@ -70,7 +70,7 @@ modules:
 
   - name: graph_out
     kind: map
-    initialBlock: 18959185 
+    initialBlock: 16291127
     inputs:
       - source: sf.substreams.v1.Clock
       - map: map_liquidations
